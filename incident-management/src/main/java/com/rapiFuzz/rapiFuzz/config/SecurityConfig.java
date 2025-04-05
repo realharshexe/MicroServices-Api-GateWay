@@ -18,11 +18,11 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable()) // Disabled CSRF for development (enable in production)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/users/register", "/users/login",
-                                "/incidents", "/incidents/{id}"
+                        .requestMatchers(
+                                "/users/register", "/users/login",
+                                "/incidents", "/incidents/", "/incidents/{id}", "/incidents/**"
                         ).permitAll()
-                        .requestMatchers("/incidents/**").authenticated()
-                        .anyRequest().authenticated() // Secure all other endpoints
+                        .anyRequest().authenticated()
                 );
 
         return http.build();
