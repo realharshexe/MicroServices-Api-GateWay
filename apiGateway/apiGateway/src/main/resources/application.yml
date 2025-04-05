@@ -1,0 +1,45 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: apiGateway
+
+  autoconfigure:
+      exclude: org.springframework.boot.autoconfigure.security.reactive.ReactiveSecurityAutoConfiguration
+
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+
+      routes:
+        - id: USER-MANAGEMENT-SERVICE
+          uri: lb://user-management-service
+          predicates:
+            - Path=/api/users/**
+          filters:
+            - StripPrefix=1
+
+        - id: INCIDENT-MANAGEMENT
+          uri: lb://incident-management
+          predicates:
+            - Path=/incidents/**
+          filters:
+            - StripPrefix=1
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+    register-with-eureka: true
+    fetch-registry: true
+    healthcheck:
+      enabled: true
+
+  instance:
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 10
+    lease-expiration-duration-in-seconds: 30
